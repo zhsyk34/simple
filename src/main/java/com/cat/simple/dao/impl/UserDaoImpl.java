@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -15,15 +16,20 @@ import com.cat.simple.model.User;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-	private String packageName = this.getClass().getInterfaces()[0].getName();
-
 	@Resource
 	private SqlSessionFactory sqlSessionFactory;
 
 	@Override
 	public int save(User entity) {
-		System.out.println(packageName);
-		int result = sqlSessionFactory.openSession().insert(packageName + ".save", entity);
+
+		SqlSession session = sqlSessionFactory.openSession();
+		// System.out.println(packageName);
+		// private String packageName =
+		// this.getClass().getInterfaces()[0].getName();
+		// int result = session.insert(packageName + ".save", entity);
+
+		UserDao userDao = session.getMapper(UserDao.class);
+		int result = userDao.save(entity);
 		return result;
 	}
 
